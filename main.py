@@ -10,6 +10,7 @@ import torch.backends.cudnn as cudnn
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
+
 def realLoss(D_out):
     b_size = D_out.size(0)
     labels = torch.ones(b_size) * 0.9
@@ -36,7 +37,7 @@ d_hidden_size = 32
 latent_size = 100
 g_output_size = 784
 g_hidden_size = 32
-lr = 0.002
+lr = 0.0002
 num_samples = 16
 
 transform = transforms.ToTensor()
@@ -58,7 +59,7 @@ if device == 'cuda':
     G = torch.nn.DataParallel(G)
     cudnn.benchmark = True
 
-d_optimizer = torch.optim.SGD(D.parameters(), lr)
+d_optimizer = torch.optim.Adam(D.parameters(), lr)
 g_optimizer = torch.optim.Adam(G.parameters(), lr)
 
 fixed_z = np.random.uniform(-1, 1, size=(num_samples, latent_size))
@@ -108,7 +109,6 @@ for epoch in range(EPOCH):
         g_optimizer.step()
 
         if batch_idx % PRINT_INTERVAL == 0:
-            # print discriminator and generator loss
             print('Epoch [{:5d}/{:5d}] | d_total_loss: {:6.4f} | g_loss: {:6.4f}'.format(epoch+1, EPOCH, d_total_loss.item(), g_loss.item()))
 
     samples_z = G(fixed_z)
@@ -116,8 +116,3 @@ for epoch in range(EPOCH):
 
 with open('train_samples.pkl', 'wb') as f:
     pkl.dump(samples, f)
-
-torch.save(G.state_dict(), './MNIST_state.mdl')
-print('Model state saved....')
-torch.save(G, './MNIST_model.mdl')
-print('Model saved....')
