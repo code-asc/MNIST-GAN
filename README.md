@@ -2,7 +2,8 @@
 
 The aim of the project is to generate the fake hand written digits using GAN.
 
-![Image of variations](https://raw.githubusercontent.com/code-asc/MNIST_GAN/master/Figure_1.png " ")
+
+![Image of variations](https://raw.githubusercontent.com/code-asc/MNIST-GAN/master/Figure_1.png " ")
 
 ## Installation
 
